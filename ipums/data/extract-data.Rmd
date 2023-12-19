@@ -1,0 +1,25 @@
+---
+title: "Extract IPUMS CPS data"
+output:
+  html_document:
+    df_print: paged
+---
+The data is obtained from [IPUMS](https://cps.ipums.org/cps/index.shtml).
+
+Set the current directory to contain the IPUMS data.
+```{r}
+# setwd('/asec/data')
+```
+
+Display the column descriptions:
+```{r}
+library('ipumsr')
+ddi <- read_ipums_ddi("cps_00001.xml")
+data <- read_ipums_micro(ddi)
+str(data)
+```
+Write the data to a CSV so I can escape R hell and use the data in Python.
+```{r}
+write.csv(data, "data.csv", row.names = FALSE)
+```
+
