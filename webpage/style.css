@@ -16,3 +16,54 @@ body {
 .bar {
     fill: steelblue;
 }
+.yearLabel {
+    fill: #555; /* Dark grey color for the text */
+    font-family: 'Arial', sans-serif; /* Use a common, readable font */
+    font-size: 38px; /* Slightly larger font size for visibility */
+    font-weight: bold; /* Make the text bold to stand out */
+    opacity: 0.75; /* Slightly transparent to blend with the background */
+}
+body {
+    background-color: #f7e9d9; /* Light peach background */
+    font-family: 'Arial', sans-serif; /* Common, readable font */
+}
+
+#distplot {
+    background-color: #f7e9d9; /* Match the body's background */
+    border: 1px solid #f0e0d6; /* Light border for the plot area */
+}
+
+.axis line,
+.axis path {
+    stroke: #d3c1b7; /* Light brown lines for the axes */
+}
+
+.axis text {
+    fill: #805a4a; /* Darker brown for the text */
+    font-size: 12px; /* Smaller font size for axis text */
+}
+
+.bar {
+    fill: #d0719b; /* Pinkish shade for the bars */
+}
+
+.x.axis path {
+    display: none; /* Hide the path for x-axis to match the style */
+}
+
+.yearLabel {
+    fill: #805a4a; /* Darker brown for the year label, matching the axis text */
+    font-size: 24px; /* Larger font size for the year label */
+    font-weight: bold; /* Bold text for the year label */
+}
+
+#plotTitle {
+}
+
+/* Additional styles for grid lines and other elements may be required */
+.chartTitle {
+    font-family: 'Arial', sans-serif; /* Choose a readable font */
+    font-size: 24px; /* Choose an appropriate size */
+    font-weight: bold; /* Bold font weight */
+    fill: #805a4a; /* Color that matches the rest of your chart text */
+}

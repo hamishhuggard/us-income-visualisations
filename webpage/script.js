@@ -1,4 +1,5 @@
 d3.json('data.json').then(function(data) {
+    
     const margin = {top: 20, right: 20, bottom: 30, left: 40},
         width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
@@ -8,6 +9,16 @@ d3.json('data.json').then(function(data) {
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Add title text element
+    const title = svg.append("text")
+        .attr("class", "chartTitle")
+        .attr("x", width / 2) // Position the title in the middle of the svg
+        .attr("y", +20) // Position above the chart
+        .attr("text-anchor", "middle") // Center the text
+        .style("font-size", "20px") // Font size
+        .style("fill", "#805a4a") // Font color
+        .text(data.title); // Use the title from your data.json
 
     const x = d3.scaleLinear()
         .domain([d3.min(data.binsX), d3.max(data.binsX)])
@@ -26,43 +37,49 @@ d3.json('data.json').then(function(data) {
         .attr("class", "y axis")
         .call(d3.axisLeft(y));
 
+    // Add text element for the year in the top left corner
+    const yearLabel = svg.append("text")
+        .attr("class", "yearLabel")
+        .attr("x", 10) // Adjust position from the left margin
+        .attr("y", 30) // Adjust position from the top margin
+        .attr("text-anchor", "start")
+
     let currentYearIndex = 0;
 
     function animateYears() {
         if (currentYearIndex < data.years.length) {
             const year = data.years[currentYearIndex];
             updatePlot(year);
-            // Calculate the delay for the current year
+            // Use timePerYear for delay
             const delay = data.timePerYear[currentYearIndex] * 1000; // Convert seconds to milliseconds
             currentYearIndex++;
             setTimeout(animateYears, delay);
         } else {
-            // Optionally, loop the animation
-            currentYearIndex = 0; // Reset to start
-            animateYears(); // Restart the animation
+            // Optionally reset to start for looping
+            currentYearIndex = 0;
+            animateYears(); // Optionally restart the animation
         }
     }
 
-function updatePlot(year) {
-    const values = data.values[year];
-    const update = svg.selectAll(".bar").data(values);
-    const enter = update.enter().append("rect").attr("class", "bar")
-                    .attr("x", (d, i) => x(data.binsX[i]))
-                    .attr("width", x(data.binsX[1]) - x(data.binsX[0]) - 1);
-    
-    // Updating existing bars
-    update.merge(enter)
-        .transition().duration(1000)
-        .attr("y", d => y(d)) // Set the new y position based on the data value
-        .attr("height", d => height - y(d)); // Adjust the height from the base to the new y position
+    function updatePlot(year) {
+        const values = data.values[year];
+        const update = svg.selectAll(".bar").data(values);
+        const enter = update.enter().append("rect")
+                        .attr("class", "bar")
+                        .attr("x", (d, i) => x(data.binsX[i]))
+                        .attr("width", x(data.binsX[1]) - x(data.binsX[0]) - 1);
+        
+        update.merge(enter)
+            .transition().duration(1000)
+            .attr("y", d => y(d))
+            .attr("height", d => height - y(d));
 
-    // Removing any bars that no longer have corresponding data
-    update.exit().remove();
+        update.exit().remove();
 
-    d3.select("#plotTitle").text("Distribution for Year: " + year);
-}
+        // Update the year label to display only the year
+        yearLabel.text(year);
+    }
 
-    // Start the animation
+    // Start the animation with the first year
     animateYears();
 });
-
