@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>D3 Distplot Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* Basic styles for the plot */
+        .axis line,
+        .axis path {
+            stroke: black;
+        }
+        .axis text {
+            fill: black;
+            font-size: 12px;
+        }
+        .bar {
+            fill: steelblue;
+        }
+    </style>
+</head>
+<body>
+    <div id="distplot"></div>
+    <script>
+        d3.json('data.json').then(function(data) {
+            const margin = {top: 20, right: 20, bottom: 30, left: 40},
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+            // Create the SVG canvas
+            const svg = d3.select("#distplot").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            // Process the data
+            const binsX = data.binsX;
+            const labels = data.labels;
+            const labelsX = data.labelsX;
+            const data1973 = data.values['1973'];
+
+            // X scale
+            const x = d3.scaleLinear()
+                .domain([d3.min(binsX), d3.max(binsX)]) // Use the binsX for the domain
+                .range([0, width]);
+
+            // Y scale
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(data1973)])
+                .range([height, 0]);
+
+            // X-axis
+            const xAxis = d3.axisBottom(x)
+                .tickValues(labelsX)
+                .tickFormat(function(d, i) { return labels[i]; });
+
+            // Y-axis
+            const yAxis = d3.axisLeft(y);
+
+            // Append the axes to the svg
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+
+            // Create the bars
+            svg.selectAll(".bar")
+                .data(data1973)
+              .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function(d, i) { return x(binsX[i]); })
+                .attr("y", function(d) { return y(d); })
+                .attr("width", x(binsX[1]) - x(binsX[0]) - 1) // Assume equal spacing for simplicity
+                .attr("height", function(d) { return height - y(d); });
+        });
+    </script>
+</body>
+</html>
