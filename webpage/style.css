@@ -51,6 +51,8 @@ body {
     font-size: 24px; /* Choose an appropriate size */
     font-weight: bold; /* Bold font weight */
     fill: #805a4a; /* Color that matches the rest of your chart text */
+    font-size: 20px;
+    fill: #805a4a;
 }
 
 .horizontalGrid {
@@ -70,4 +72,10 @@ body {
 
 .quartileBox {
     fill: rgba(0,0,255,0.1);
+    fill: rgba(255, 0, 0, 0.2);
+}
+
+.middleIncomeLabel {
+    fill: #555;
+    font-size: 20px;
 }
