@@ -1,6 +1,6 @@
 d3.json('data.json').then(function(data) {
     
-    const margin = {top: 20, right: 20, bottom: 30, left: 40},
+    const margin = {top: 100, right: 70, bottom: 70, left: 70},
         width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
@@ -13,13 +13,14 @@ d3.json('data.json').then(function(data) {
     // Add title text element
     const title = svg.append("text")
         .attr("class", "chartTitle")
-        .attr("x", width / 2) // Position the title in the middle of the svg
-        .attr("y", +20) // Position above the chart
-        .attr("text-anchor", "middle") // Center the text
+        .attr("x", 0)
+        .attr("text-anchor", "start")
+        .attr("y", -20) // Position above the chart
         .style("font-size", "20px") // Font size
         .style("fill", "#805a4a") // Font color
         .text(data.title); // Use the title from your data.json
 
+    // Define x and y scales
     const x = d3.scaleLinear()
         .domain([d3.min(data.binsX), d3.max(data.binsX)])
         .range([0, width]);
@@ -28,20 +29,44 @@ d3.json('data.json').then(function(data) {
         .domain(data.yLimits)
         .range([height, 0]);
 
+    // X-axis is added as before
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x).tickValues(data.labelsX).tickFormat((d, i) => data.labels[i]));
 
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(d3.axisLeft(y));
+    // Add grid lines for even integer y-values
+    svg.selectAll("line.horizontalGrid").data(y.ticks())
+        .enter()
+        .append("line")
+        .attr("class", "horizontalGrid")
+        .filter(d => d % 2 === 0) // Only keep the lines for even integer values
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", d => y(d))
+        .attr("y2", d => y(d))
+        .attr("stroke", "#ddd") // Style the grid lines
+        .attr("stroke-width", "1px")
+        .attr("shape-rendering", "crispEdges")
+
+    // Add labels for the grid lines on the far right
+    svg.selectAll("text.gridLabel").data(y.ticks())
+        .enter()
+        .filter(d => d % 2 === 0) // Only keep the lines for even integer values
+        .append("text")
+        .attr("class", "gridLabel")
+        .attr("x", width)
+        .attr("y", d => y(d)-10) // Position slightly above the grid line
+        .attr("text-anchor", "end")
+        .attr("alignment-baseline", "middle")
+        .text(d => d % 1 === 0 ? d : "") // Only label even integer values
+        .attr("fill", "#555"); // Style the grid labels
 
     // Add text element for the year in the top left corner
     const yearLabel = svg.append("text")
         .attr("class", "yearLabel")
         .attr("x", 10) // Adjust position from the left margin
-        .attr("y", 30) // Adjust position from the top margin
+        .attr("y", 40) // Adjust position from the top margin
         .attr("text-anchor", "start")
 
     let currentYearIndex = 0;

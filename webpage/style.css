@@ -5,26 +5,9 @@ body {
     flex-direction: column;
     height: 100vh;
 }
-.axis line,
-.axis path {
-    stroke: black;
-}
-.axis text {
-    fill: black;
-    font-size: 12px;
-}
-.bar {
-    fill: steelblue;
-}
-.yearLabel {
-    fill: #555; /* Dark grey color for the text */
-    font-family: 'Arial', sans-serif; /* Use a common, readable font */
-    font-size: 38px; /* Slightly larger font size for visibility */
-    font-weight: bold; /* Make the text bold to stand out */
-    opacity: 0.75; /* Slightly transparent to blend with the background */
-}
+
 body {
-    background-color: #f7e9d9; /* Light peach background */
+    background-color: white; /* Light peach background */
     font-family: 'Arial', sans-serif; /* Common, readable font */
 }
 
@@ -33,31 +16,32 @@ body {
     border: 1px solid #f0e0d6; /* Light border for the plot area */
 }
 
-.axis line,
-.axis path {
-    stroke: #d3c1b7; /* Light brown lines for the axes */
-}
-
+/* x-axis ticks */
 .axis text {
     fill: #805a4a; /* Darker brown for the text */
-    font-size: 12px; /* Smaller font size for axis text */
+    font-size: 22px; /* Smaller font size for axis text */
+    fill: #555; /* Dark grey color for the text */
+    opacity: 0.8; /* Slightly transparent to blend with the background */
 }
 
 .bar {
     fill: #d0719b; /* Pinkish shade for the bars */
+    opacity: 0.8; /* Slightly transparent to blend with the background */
 }
 
+/* x-axis line */
 .x.axis path {
-    display: none; /* Hide the path for x-axis to match the style */
+    display: none;
 }
 
+/* the big label saying which year the data is from */
 .yearLabel {
+    font-family: 'Arial', sans-serif;
+    opacity: 1.00;
     fill: #805a4a; /* Darker brown for the year label, matching the axis text */
-    font-size: 24px; /* Larger font size for the year label */
-    font-weight: bold; /* Bold text for the year label */
-}
-
-#plotTitle {
+    fill: #d0719b; /* Pinkish shade for the bars */
+    font-size: 44px;
+    font-weight: bold;
 }
 
 /* Additional styles for grid lines and other elements may be required */
@@ -66,4 +50,19 @@ body {
     font-size: 24px; /* Choose an appropriate size */
     font-weight: bold; /* Bold font weight */
     fill: #805a4a; /* Color that matches the rest of your chart text */
+}
+
+.horizontalGrid {
+    stroke: #ddd; /* Light grey color for the grid lines */
+    stroke-width: 3px; /* Thin lines for subtlety */
+    stroke-dasharray: 3, 3; /* Creates a dotted line pattern */
+    shape-rendering: crispEdges; /* Keeps the lines sharp */
+}
+
+/* horizontal gridlines */
+.gridLabel {
+    fill: #555; /* Dark grey color for the text */
+    font-size: 20px; /* Small font size for subtlety */
+    text-anchor: end; /* Align text to the end for right alignment */
+    alignment-baseline: middle; /* Vertical alignment to center text with the grid lines */
 }
