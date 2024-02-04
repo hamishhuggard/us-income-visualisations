@@ -14,3 +14,10 @@ loadData('household.json'); // Adjust as needed for your default choice
 document.getElementById('dataSelect').addEventListener('change', function() {
     loadData(this.value);
 });
+
+document.getElementById('incrementSelect').addEventListener('change', function() {
+    // Reset currentYearIndex to 0 or adjust as needed
+    currentYearIndex = 0;
+    // Restart the animation with the new increment
+    animateYears();
+});

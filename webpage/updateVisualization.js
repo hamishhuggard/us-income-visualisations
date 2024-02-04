@@ -72,17 +72,19 @@ function updateVisualization(data) {
     let currentYearIndex = 0;
 
     function animateYears() {
+        const increment = parseInt(document.getElementById('incrementSelect').value, 10);
+
         if (currentYearIndex < data.years.length) {
             const year = data.years[currentYearIndex];
             updatePlot(year);
             // Use timePerYear for delay
             const delay = data.timePerYear[currentYearIndex] * 1000; // Convert seconds to milliseconds
-            currentYearIndex++;
+            currentYearIndex += increment;
             setTimeout(animateYears, delay);
         } else {
             // Optionally reset to start for looping
-            // currentYearIndex = 0;
-            // animateYears(); // Optionally restart the animation
+            currentYearIndex = 0;
+            animateYears(); // Optionally restart the animation
         }
     }
 
