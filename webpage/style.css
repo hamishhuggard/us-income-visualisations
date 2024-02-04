@@ -8,6 +8,10 @@ body {
     font-family: 'Arial', sans-serif; /* Common, readable font */
 }
 
+#dataSelect {
+    margin: 20px;
+}
+
 #distplot {
     background-color: #f7e9d9; /* Match the body's background */
     border: 1px solid #f0e0d6; /* Light border for the plot area */
