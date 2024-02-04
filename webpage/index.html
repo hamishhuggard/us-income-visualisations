@@ -4,9 +4,16 @@
     <title>D3 Distplot Example</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="updateVisualization.js"></script> 
+    <script src="script.js"></script>
 </head>
 <body>
+    <select id="dataSelect">
+        <option value="household.json">Household Income</option>
+        <option value="individual.json">Individual Income</option>
+        <option value="male.json">Male Individual Income</option>
+        <option value="female.json">Female Individual Income</option>
+    </select>
     <div id="distplot"></div>
-    <script src="script.js"></script>
 </body>
 </html>
