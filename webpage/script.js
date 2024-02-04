@@ -29,7 +29,7 @@ d3.json('data.json').then(function(data) {
         .domain(data.yLimits)
         .range([height, 0]);
 
-    // X-axis is added as before
+    // Add x-axis
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
@@ -87,6 +87,27 @@ d3.json('data.json').then(function(data) {
     }
 
     function updatePlot(year) {
+
+        // Update the quartile box
+        const quartiles = data.quartiles[currentYearIndex];
+        const lowerQuartileX = x(quartiles[0]);
+        const upperQuartileX = x(quartiles[1]);
+        let quartileBox = svg.selectAll(".quartileBox").data([quartiles]);
+
+        quartileBox.enter()
+            .append("rect")
+            .attr("class", "quartileBox")
+            .merge(quartileBox)
+            .transition() // Start a transition to update the quartile box
+            .duration(1000) // Duration of 1 second for the transition
+            .attr("x", lowerQuartileX) // Update the x position
+            .attr("width", upperQuartileX - lowerQuartileX) // Update the width
+            .attr("y", 0) // Maintain y at the top of the plot
+            .attr("height", height) // Maintain the full height of the plot
+            .style("fill", "rgba(255, 0, 0, 0.2)"); // Set the fill with translucency
+
+
+        // Update the bars
         const values = data.values[year];
         const update = svg.selectAll(".bar").data(values);
         const enter = update.enter().append("rect")
@@ -102,7 +123,7 @@ d3.json('data.json').then(function(data) {
         update.exit().remove();
 
         // Update the year label to display only the year
-        yearLabel.text(year);
+        yearLabel.text(year).raise();
     }
 
     // Start the animation with the first year

@@ -4,9 +4,6 @@ body {
     align-items: center;
     flex-direction: column;
     height: 100vh;
-}
-
-body {
     background-color: white; /* Light peach background */
     font-family: 'Arial', sans-serif; /* Common, readable font */
 }
@@ -65,4 +62,8 @@ body {
     font-size: 20px; /* Small font size for subtlety */
     text-anchor: end; /* Align text to the end for right alignment */
     alignment-baseline: middle; /* Vertical alignment to center text with the grid lines */
+}
+
+.quartileBox {
+    fill: rgba(0,0,255,0.1);
 }
