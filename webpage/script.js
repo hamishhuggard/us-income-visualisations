@@ -106,6 +106,21 @@ d3.json('data.json').then(function(data) {
             .attr("height", height) // Maintain the full height of the plot
             .style("fill", "rgba(255, 0, 0, 0.2)"); // Set the fill with translucency
 
+        // Middle Income label updates
+        let middleIncomeLabel = svg.selectAll(".middleIncomeLabel").data([year]);
+        const middleQuartileX = (lowerQuartileX + upperQuartileX) / 2;
+        middleIncomeLabel.enter()
+            .append("text")
+            .attr("class", "middleIncomeLabel")
+            .merge(middleIncomeLabel)
+            .transition()
+            .duration(1000)
+            .attr("x", middleQuartileX)
+            .attr("y", +20)
+            .attr("text-anchor", "middle")
+            .text("middle income")
+            .style("fill", "#555")
+            .style("font-size", "20px");
 
         // Update the bars
         const values = data.values[year];
@@ -129,3 +144,4 @@ d3.json('data.json').then(function(data) {
     // Start the animation with the first year
     animateYears();
 });
+
