@@ -3,24 +3,24 @@
 <head>
     <title>US Income Distributions</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="updateVisualization.js"></script> 
-    <script src="script.js"></script>
+    <script src="d3.v7.min.js" srcb="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
     <div>
         <select id="dataSelect" class="selector">
             <option value="household.json">Household Income</option>
-            <option value="individual.json">Individual Income</option>
-            <option value="male.json">Male Individual Income</option>
             <option value="female.json">Female Individual Income</option>
+            <option value="male.json">Male Individual Income</option>
+            <option value="individual.json">Individual Income</option>
         </select>
         <select id="incrementSelect" class="selector">
-            <option value="1">All Years</option>
             <option value="5">Five Year Increments</option>
+            <option value="1">All Years</option>
             <option value="10">Decades</option>
         </select>
     </div>
     <div id="distplot"></div>
+    <script src="updateVisualization.js"></script> 
+    <script src="script.js"></script>
 </body>
 </html>

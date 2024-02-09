@@ -1,5 +1,5 @@
 function updateVisualization(data) {
-    
+
     const margin = {top: 100, right: 70, bottom: 70, left: 70},
         width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
@@ -60,84 +60,176 @@ function updateVisualization(data) {
         .text(d => d % 1 === 0 ? d : "") // Only label even integer values
         .attr("fill", "#555"); // Style the grid labels
 
-    // Add text element for the year in the top left corner
+    // Initialize year label
     const yearLabel = svg.append("text")
         .attr("class", "yearLabel")
         .attr("x", 10) // Adjust position from the left margin
         .attr("y", 40) // Adjust position from the top margin
         .attr("text-anchor", "start")
+        .text(data.years[0]);
 
     let currentYearIndex = 0;
 
-    function animateYears() {
-        const increment = parseInt(document.getElementById('incrementSelect').value, 10);
+    // Initialize bars
+    let values = data.values[data.years[0]];
+    svg.selectAll(".bar")
+        .data(values)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", (d, i) => x(data.binsX[i]))
+        .attr("width", x(data.binsX[1]) - x(data.binsX[0]) - 1)
+        .attr("y", d => y(d))
+        .attr("height", d => height - y(d));
 
-        if (currentYearIndex < data.years.length) {
-            const year = data.years[currentYearIndex];
-            updatePlot(year);
-            // Use timePerYear for delay
-            const delay = data.timePerYear[currentYearIndex] * 1000; // Convert seconds to milliseconds
-            currentYearIndex += increment;
-            setTimeout(animateYears, delay);
-        } else {
-            // Optionally reset to start for looping
-            currentYearIndex = 0;
-            animateYears(); // Optionally restart the animation
+
+    function animateYears() {
+
+        const increment = parseInt(document.getElementById('incrementSelect').value, 10);
+            
+        setTimeout(initialiseQuartileBox, 1000);
+        setTimeout(drawLine, 2000);
+        setTimeout(firstYearLabel, 3000);
+
+        let j=4;
+        for (let i=0; i<data.years.length; i=i+increment) {
+            setTimeout(() => updatePlot(i), j*1000);
+            j++;
         }
+
+        // Optionally reset to start for looping
+        //setTimeout(animateYears, 5000+(i+5)*1000);
+
     }
 
-    function updatePlot(year) {
+    function initialiseQuartileBox() {
 
-        // Update the quartile box
-        const quartiles = data.quartiles[currentYearIndex];
+        const quartiles = data.quartiles[0];
         const lowerQuartileX = x(quartiles[0]);
         const upperQuartileX = x(quartiles[1]);
-        let quartileBox = svg.selectAll(".quartileBox").data([quartiles]);
+        const middleQuartileX = (lowerQuartileX + upperQuartileX) / 2;
 
-        quartileBox.enter()
+        // initialise quartile box
+        svg.selectAll(".quartileBox")
+            .data([0])
+            .enter()
             .append("rect")
             .attr("class", "quartileBox")
-            .merge(quartileBox)
-            .transition() // Start a transition to update the quartile box
-            .duration(1000) // Duration of 1 second for the transition
-            .attr("x", lowerQuartileX) // Update the x position
-            .attr("width", upperQuartileX - lowerQuartileX) // Update the width
-            .attr("y", 0) // Maintain y at the top of the plot
-            .attr("height", height) // Maintain the full height of the plot
-
-        // Middle Income label updates
-        let middleIncomeLabel = svg.selectAll(".middleIncomeLabel").data([year]);
-        const middleQuartileX = (lowerQuartileX + upperQuartileX) / 2;
-        middleIncomeLabel.enter()
-            .append("text")
-            .attr("class", "middleIncomeLabel")
-            .merge(middleIncomeLabel)
+            .attr("y", 0)
+            .attr("height", height)
+            .attr("x", lowerQuartileX)
+            .attr("width", upperQuartileX - lowerQuartileX)
+            .style('opacity', '0.0')
             .transition()
             .duration(1000)
+            .style('opacity', '0.8');
+
+        // initialise "middle income" label
+        svg.selectAll(".middleIncomeLabel")
+            .data([0])
+            .enter()
+            .append("text")
+            .attr("class", "middleIncomeLabel")
             .attr("x", middleQuartileX)
             .attr("y", +20)
             .attr("text-anchor", "middle")
             .text("middle income")
+            .style('opacity', '0.0')
+            .transition()
+            .duration(1000)
+            .style('opacity', '0.8');
+    }
 
-        // Update the bars
-        const values = data.values[year];
-        const update = svg.selectAll(".bar").data(values);
-        const enter = update.enter().append("rect")
-                        .attr("class", "bar")
-                        .attr("x", (d, i) => x(data.binsX[i]))
-                        .attr("width", x(data.binsX[1]) - x(data.binsX[0]) - 1);
-        
-        update.merge(enter)
-            .transition().duration(1000)
+
+
+    function drawLine() {
+
+        const lineData = values.map((val, index) => {
+            const bins = data.binsX;
+            const xOffset = (bins[1]-bins[0])/2;
+            return { x: x(bins[index]+xOffset), y: y(val) };
+        });
+
+        // Create a line generator
+        const line = d3.line()
+            .x(d => d.x)
+            .y(d => d.y);
+
+        // Remove existing line to redraw
+        svg.selectAll(".dataLine").remove();
+
+        // Append the new line
+        const path = svg.append("path")
+            .datum(lineData)
+            .attr("class", "dataLine")
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 2)
+            .attr("d", line);
+
+        // Calculate the length of the line
+        const totalLength = path.node().getTotalLength();
+
+        // Set the dash array and dash offset to the total length, then transition
+        path.attr("stroke-dasharray", totalLength + " " + totalLength)
+            .attr("stroke-dashoffset", totalLength)
+            .transition()
+            .duration(2000) // Adjust duration to control the speed of the animation
+            .attr("stroke-dashoffset", 0);
+
+    }
+
+    function firstYearLabel() {
+        svg.append("text")
+            .attr("class", "firstYearLabel")
+            .attr("x", 10)
+            .attr("y", y(values[1])-10)
+            .attr("text-anchor", "start")
+            .text(data.years[0])
+            .style('opacity', '0.0')
+            .transition()
+            .duration(1000)
+            .style('opacity', '0.8');
+    }
+
+    function updatePlot(currentYearIndex) {
+
+        const year = data.years[currentYearIndex];
+
+        // Update quartile box
+        quartiles = data.quartiles[currentYearIndex];
+        lowerQuartileX = x(quartiles[0]);
+        upperQuartileX = x(quartiles[1]);
+
+        svg.selectAll(".quartileBox")
+            .transition() // Start a transition to update the quartile box
+            .duration(1000) // Duration of 1 second for the transition
+            .attr("x", lowerQuartileX) // Update the x position
+            .attr("width", upperQuartileX - lowerQuartileX) // Update the width
+
+        // Update 'middle income' label
+        middleQuartileX = (lowerQuartileX + upperQuartileX) / 2;
+        svg.selectAll(".middleIncomeLabel")
+            .transition()
+            .duration(1000)
+            .attr("x", middleQuartileX)
+
+        // Update bars
+        values = data.values[year];
+        svg.selectAll(".bar")
+            .data(values)
+            .transition()
+            .duration(1000)
             .attr("y", d => y(d))
             .attr("height", d => height - y(d));
 
-        update.exit().remove();
+        // Update year label
+        yearLabel.text(year);
 
-        // Update the year label to display only the year
-        yearLabel.text(year).raise();
+
     }
 
     // Start the animation with the first year
     animateYears();
+
 };

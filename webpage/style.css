@@ -79,3 +79,11 @@ body {
     fill: #555;
     font-size: 20px;
 }
+
+.firstYearLabel {
+    font-family: 'Arial', sans-serif;
+    opacity: 1.00;
+    fill: steelblue;
+    font-size: 24px;
+    font-weight: bold;
+}
