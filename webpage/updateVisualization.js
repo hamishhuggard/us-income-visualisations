@@ -63,8 +63,10 @@ function updateVisualization(data) {
     // Initialize year label
     const yearLabel = svg.append("text")
         .attr("class", "yearLabel")
-        .attr("x", 10) // Adjust position from the left margin
-        .attr("y", 40) // Adjust position from the top margin
+        .attr("y", 40) 
+        .attr("y", 60) 
+        .attr("x", 10) // Top left
+        .attr("x", 960 - margin.right - 280) // Top right
         .attr("text-anchor", "start")
         .text(data.years[0]);
 
@@ -183,7 +185,9 @@ function updateVisualization(data) {
         svg.append("text")
             .attr("class", "firstYearLabel")
             .attr("x", 10)
+            .attr("x", 20)
             .attr("y", y(values[1])-10)
+            .attr("y", y(values[0])+10)
             .attr("text-anchor", "start")
             .text(data.years[0])
             .style('opacity', '0.0')

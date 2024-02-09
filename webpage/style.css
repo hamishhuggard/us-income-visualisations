@@ -42,6 +42,7 @@ body {
     fill: #805a4a; /* Darker brown for the year label, matching the axis text */
     fill: #d0719b; /* Pinkish shade for the bars */
     font-size: 44px;
+    font-size: 74px;
     font-weight: bold;
 }
 
