@@ -92,15 +92,20 @@ function updateVisualization(data) {
         setTimeout(initialiseQuartileBox, 1000);
         setTimeout(drawLine, 2000);
         setTimeout(firstYearLabel, 3000);
+        //setTimeout(firstYearLabel, 0000);
 
-        let j=4;
+        let j=0;
+        const base=4000
+        let timeIncrement;
+        if (increment===1) {
+            timeIncrement = 400;
+        } else {
+            timeIncrement = 1000;
+        }
         for (let i=0; i<data.years.length; i=i+increment) {
-            setTimeout(() => updatePlot(i), j*1000);
+            setTimeout(() => updatePlot(i, timeIncrement), base+j*timeIncrement);
             j++;
         }
-
-        // Optionally reset to start for looping
-        //setTimeout(animateYears, 5000+(i+5)*1000);
 
     }
 
@@ -146,10 +151,10 @@ function updateVisualization(data) {
 
     function drawLine() {
 
-        const lineData = values.map((val, index) => {
-            const bins = data.binsX;
-            const xOffset = (bins[1]-bins[0])/2;
-            return { x: x(bins[index]+xOffset), y: y(val) };
+        const bins = data.binsX;
+        const xOffset = 0;//(bins[1]-bins[0])/2;
+        const lineData = data.referenceY.map((val, index) => {
+            return { x: x(data.referenceX[index]+xOffset), y: y(val) };
         });
 
         // Create a line generator
@@ -166,7 +171,7 @@ function updateVisualization(data) {
             .attr("class", "dataLine")
             .attr("fill", "none")
             .attr("stroke", "steelblue")
-            .attr("stroke-width", 2)
+            .attr("stroke-width", 3)
             .attr("d", line);
 
         // Calculate the length of the line
@@ -182,12 +187,12 @@ function updateVisualization(data) {
     }
 
     function firstYearLabel() {
+        const mid_idx = Math.round( data.referenceY.length/20 );
         svg.append("text")
             .attr("class", "firstYearLabel")
-            .attr("x", 10)
-            .attr("x", 20)
-            .attr("y", y(values[1])-10)
-            .attr("y", y(values[0])+10)
+            .attr("x", x(data.referenceX[mid_idx]))
+            //.attr("y", y(values[i])+10)
+            .attr("y", y(data.referenceY[mid_idx])-20)
             .attr("text-anchor", "start")
             .text(data.years[0])
             .style('opacity', '0.0')
@@ -196,7 +201,7 @@ function updateVisualization(data) {
             .style('opacity', '0.8');
     }
 
-    function updatePlot(currentYearIndex) {
+    function updatePlot(currentYearIndex, duration) {
 
         const year = data.years[currentYearIndex];
 
@@ -207,7 +212,7 @@ function updateVisualization(data) {
 
         svg.selectAll(".quartileBox")
             .transition() // Start a transition to update the quartile box
-            .duration(1000) // Duration of 1 second for the transition
+            .duration(duration) // Duration of 1 second for the transition
             .attr("x", lowerQuartileX) // Update the x position
             .attr("width", upperQuartileX - lowerQuartileX) // Update the width
 
@@ -215,7 +220,7 @@ function updateVisualization(data) {
         middleQuartileX = (lowerQuartileX + upperQuartileX) / 2;
         svg.selectAll(".middleIncomeLabel")
             .transition()
-            .duration(1000)
+            .duration(duration)
             .attr("x", middleQuartileX)
 
         // Update bars
@@ -223,7 +228,7 @@ function updateVisualization(data) {
         svg.selectAll(".bar")
             .data(values)
             .transition()
-            .duration(1000)
+            .duration(duration)
             .attr("y", d => y(d))
             .attr("height", d => height - y(d));
 
