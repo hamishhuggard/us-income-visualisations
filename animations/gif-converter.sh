@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Define an array of your specific video names
-# declare -a videos=("individual" "male" "female" "household")
-declare -a videos=("female")
+declare -a videos=("individual" "male" "female" "household")
 
 # Loop through the array
 for video in "${videos[@]}"; do
