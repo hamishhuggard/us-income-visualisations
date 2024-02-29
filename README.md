@@ -1,7 +1,10 @@
 # US Income Visualisations
 
 This repo creates animated data visualisations of US household and individual income:
+![Household incomes](/animations/gif/household.gif)
 ![Individual incomes](/animations/gif/individual.gif)
+![Female incomes](/animations/gif/female.gif)
+![Male incomes](/animations/gif/male.gif)
 
 The data comes from [IPUMs](https://cps.ipums.org/cps/about.shtml), which itself comes from the [US Current Population Survey](https://en.wikipedia.org/wiki/Current_Population_Survey).
 
