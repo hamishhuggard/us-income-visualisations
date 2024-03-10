@@ -13,7 +13,7 @@ function updateVisualization(data) {
     // Add title text element
     const title = svg.append("text")
         .attr("class", "chartTitle")
-        .attr("x", 0)
+        .attr("x", 0 + 20)
         .attr("text-anchor", "start")
         .attr("y", -20) // Position above the chart
         .text(data.title); // Use the title from your data.json
@@ -114,7 +114,8 @@ function updateVisualization(data) {
         const quartiles = data.quartiles[0];
         const lowerQuartileX = x(quartiles[0]);
         const upperQuartileX = x(quartiles[1]);
-        const middleQuartileX = (lowerQuartileX + upperQuartileX) / 2;
+        // const middleQuartileX = (lowerQuartileX + upperQuartileX) / 2;
+        const middleQuartileX = Math.max((lowerQuartileX + upperQuartileX) / 2, 60);
 
         // initialise quartile box
         svg.selectAll(".quartileBox")
@@ -217,7 +218,7 @@ function updateVisualization(data) {
             .attr("width", upperQuartileX - lowerQuartileX) // Update the width
 
         // Update 'middle income' label
-        middleQuartileX = (lowerQuartileX + upperQuartileX) / 2;
+        middleQuartileX = Math.max((lowerQuartileX + upperQuartileX) / 2, 60);
         svg.selectAll(".middleIncomeLabel")
             .transition()
             .duration(duration)
